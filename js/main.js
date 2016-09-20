@@ -6,7 +6,7 @@
  // TODO: Two Players can take turns clicking squares to make moves
  // TODO: Players get indication of player turn
  // TODO: Player wins game when they make three tiles in a row
- // TODO: Players can start a new game
+ // TODO: Players can start a new game after the game ends
 
  // EXTRA FEATURES
  // TODO: Players can enter their names
@@ -19,28 +19,34 @@ const App = React.createClass({
   getInitialState () {
     return {
       gameState: [],
-      theBoard: ''
+      theBoard: '',
+      circle: '<i class="fa fa-dot-circle-o" aria-hidden="true"></i>',
+      cross: '<i class="fa fa-times" aria-hidden="true"></i>',
     }
   },
 
-  playMark (e) {
+  setMark (e) {
+    const { cross, circle } = this.state;
+
     let coordinates = {
       x: e.target.name,
       y: e.target.parentElement.getAttribute("name")
     }
 
-    console.log('coordinates: ', coordinates)
+    e.target.innerHTML = cross
   },
 
   createBoard () {
     let { theBoard } = this.state;
 
-    let tileGen = Array(3).fill().map((num, i) => {
-      let elTile = <button key={i} name={i} onClick={this.playMark} className="gameTile"></button>
+    let boardSize = 3
+
+    let tileGen = Array(boardSize).fill().map((num, i) => {
+      let elTile = <div key={i} name={i} onClick={this.setMark} className="gameTile"></div>
       return elTile
     });
 
-    let rowGen = Array(3).fill().map((num, j) => {
+    let rowGen = Array(boardSize).fill().map((num, j) => {
       let elRow = <div key={j} name={j} className="tileRow">{tileGen}</div>
       return elRow
     });
@@ -55,7 +61,7 @@ const App = React.createClass({
     return (
       <div className="container">
         <h1 className="text-center">tic tac toe</h1>
-          <div className="row text-center">
+          <div className="row text-center" id="gameBoard">
             <GameBoard gameState={this.state.gameState} theBoard={this.state.theBoard}/>
           </div>
           <div className="row text-center new-game">
@@ -80,19 +86,3 @@ ReactDOM.render(
   <App/>,
   document.getElementById('root')
 )
-
-// <div className="tileRow">
-//   <div className="gameTile"><i className="fa fa-dot-circle-o" aria-hidden="true"></i></div>
-//   <div className="gameTile"><i className="fa fa-times" aria-hidden="true"></i></div>
-//   <div className="gameTile"></div>
-// </div>
-// <div className="tileRow">
-//   <div className="gameTile"></div>
-//   <div className="gameTile"></div>
-//   <div className="gameTile"></div>
-// </div>
-// <div className="tileRow">
-//   <div className="gameTile"></div>
-//   <div className="gameTile"></div>
-//   <div className="gameTile"></div>
-// </div>
