@@ -18,26 +18,48 @@
 const App = React.createClass({
   getInitialState () {
     return {
-      gameState: [],
-      theBoard: '',
+      turnCount: 0,
+      theBoard: [],
       circle: '<i class="fa fa-dot-circle-o" aria-hidden="true"></i>',
       cross: '<i class="fa fa-times" aria-hidden="true"></i>',
     }
   },
 
   setMark (e) {
-    const { cross, circle } = this.state;
+    const { cross, circle, turnCount } = this.state;
 
     let coordinates = {
-      x: e.target.name,
-      y: e.target.parentElement.getAttribute("name")
+      x: parseInt(e.target.getAttribute("name"))+1,
+      y: parseInt(e.target.parentElement.getAttribute("name"))+1
+    }
+    console.log('coordinates: ', coordinates)
+
+    let thisTurn = turnCount
+
+    if (thisTurn % 2 === 0) {
+      e.target.innerHTML = cross
+    } else {
+      e.target.innerHTML = circle
     }
 
-    e.target.innerHTML = cross
+    thisTurn++
+
+    this.setState ({
+      turnCount: thisTurn
+    })
+  },
+
+  newGame () {
+    const {theBoard, turnCount} = this.state;
+
+    this.setState({
+      theBoard: [],
+      turnCount: 0
+    }, () => this.createBoard())    
   },
 
   createBoard () {
-    let { theBoard } = this.state;
+    const { theBoard } = this.state;
 
     let boardSize = 3
 
@@ -62,10 +84,10 @@ const App = React.createClass({
       <div className="container">
         <h1 className="text-center">tic tac toe</h1>
           <div className="row text-center" id="gameBoard">
-            <GameBoard gameState={this.state.gameState} theBoard={this.state.theBoard}/>
+            <GameBoard theBoard={this.state.theBoard}/>
           </div>
           <div className="row text-center new-game">
-            <button className="btn btn-primary" onClick={this.createBoard}>New Game</button>
+            <button className="btn btn-primary" onClick={this.newGame}>New Game</button>
           </div>
       </div>
     )
@@ -73,7 +95,7 @@ const App = React.createClass({
 })
 
 const GameBoard = props => {
-  const { gameState, theBoard } = props;
+  const { theBoard } = props;
 
   return (
     <div className="row">

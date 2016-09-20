@@ -24,11 +24,11 @@
 
 .fa {
   position: absolute;
-  margin: 5px 0px 0px -30px;
   font-size: 80px;
 }
 
 .fa-times {
+  margin: 4px 0px 0px -30px;
   color: #f9275c;
   text-shadow: 0px 1px 0px #e02353,
                0px 2px 0px #e02353,
@@ -39,6 +39,7 @@
 }
 
 .fa-dot-circle-o {
+  margin: 5px 0px 0px -33px;
   color: #009dff;
   text-shadow: 0px 1px 0px #008ae0,
                0px 2px 0px #008ae0,
