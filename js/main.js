@@ -5,20 +5,24 @@
  // MVP
  // DONE: Two Players can take turns clicking squares to make moves
  // DONE: Players get indication of player turn
- // TODO: Player wins game when they make three tiles in a row
+ // DONE: Player wins game when they make three tiles in a row
  // DONE: Players can start a new game after the game ends
 
  // EXTRA FEATURES
  // TODO: Players can enter their names
  // TODO: Players can either choose who starts first or have it randomly assigned
  // TODO: Animations!
- // TODO: Players can select a bigger board
+ // TODO: Players can select a custom board
+
+ // EXTRA EXTRA FEATURES
+ // TODO: Players can seek a harder challenge with '3D Tic Tac Toe'
 
 
 const App = React.createClass({
   getInitialState () {
     return {
-      turnCount: 0,
+      currentPlayer: 0,
+      gameOver: false,
       theBoard: [],
       players: [],
       message: 'click to start new game',
@@ -27,48 +31,21 @@ const App = React.createClass({
     }
   },
 
-  setMark (e) {
-    const { cross, circle, turnCount, message, players } = this.state
-
-    let thisTurn = turnCount
-    let playerTurn
-
-    if (e.target.getAttribute("class") == "gameTile" && !e.target.innerHTML) {
-      let coordinates = {
-        x: parseInt(e.target.getAttribute("name"))+1,
-        y: parseInt(e.target.parentElement.getAttribute("name"))+1
-      }
-
-      console.log('coordinates: ', coordinates)
-
-      if (thisTurn % 2 === 0) {
-        e.target.innerHTML = cross
-        playerTurn = `Current Turn: ${players[1]}`
-      } else {
-        e.target.innerHTML = circle
-        playerTurn = `Current Turn: ${players[0]}`
-      }
-
-      thisTurn++
-    }
-
-    this.setState ({
-      turnCount: thisTurn,
-      message: playerTurn
-    })
-  },
-
   newGame () {
-    const {theBoard, turnCount, players, message} = this.state
+    const {theBoard, players, message, currentPlayer, gameOver} = this.state
 
-    let newPlayers = ['Player One', 'Player Two']
-    let startTurn = `Current Turn: ${newPlayers[0]}`
+    let newPlayers = [{name: 'Player One', winCheck: {}}, {name: 'Player Two', winCheck: {}}]
+
+    let startTurn = 0
+
+    let startMessage = `Current Turn: ${newPlayers[startTurn].name}`
 
     this.setState({
       theBoard: [],
+      currentPlayer: startTurn,
       players: newPlayers,
-      message: startTurn,
-      turnCount: 0
+      message: startMessage,
+      gameOver: false
     }, () => this.createBoard())
   },
 
@@ -89,6 +66,67 @@ const App = React.createClass({
 
     this.setState ({
       theBoard: rowGen
+    })
+  },
+
+  setMark (e) {
+    const { cross, circle, message, players, currentPlayer, gameOver } = this.state
+
+    let currP = currentPlayer
+    let playerMessage
+
+    if (e.target.getAttribute("class") === "gameTile" && !e.target.innerHTML && !gameOver) {
+
+      let x = `x${parseInt(e.target.getAttribute("name"))+1}`
+      let y = `y${parseInt(e.target.parentElement.getAttribute("name"))+1}`
+
+      currP === 0 ? e.target.innerHTML = cross : e.target.innerHTML = circle
+
+      // winState horizontal
+      if (players[currP].winCheck[x]) {
+        players[currP].winCheck[x] += 1
+        if (players[currP].winCheck[x] === 3) {
+          return this.winState()
+        }
+      } else {
+        players[currP].winCheck[x] = 1
+      }
+
+      // winState vertical
+      if (players[currP].winCheck[y]) {
+        players[currP].winCheck[y] += 1
+        if (players[currP].winCheck[y] === 3) {
+          return this.winState()
+        }
+      } else {
+        players[currP].winCheck[y] = 1
+      }
+
+      // winState diagonal
+      if (Object.keys(players[currP].winCheck).length === 6) {
+        return this.winState()
+      }
+
+      currP === 0 ? currP = 1 : currP = 0
+      playerMessage = `Current Turn: ${players[currP].name}`
+    } else {
+      playerMessage = `Click New Game to reset`
+    }
+
+    this.setState ({
+      currentPlayer: currP,
+      message: playerMessage
+    })
+  },
+
+  winState () {
+    const { players, currentPlayer, theBoard, message, gameOver } = this.state
+
+    let winMessage = `${players[currentPlayer].name} WINS!`
+
+    this.setState({
+      message: winMessage,
+      gameOver: true
     })
   },
 
