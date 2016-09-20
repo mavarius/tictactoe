@@ -1,0 +1,49 @@
+.tileRow {
+  margin: 0px;
+}
+
+.gameTile {
+  display: inline-block;
+  background: lightgrey;
+  width: 100px;
+  height: 100px;
+  margin: 10px;
+  border-radius: 10px;
+  border: transparent;
+  box-shadow: 0px 10px 0px grey;
+  text-align: center;
+}
+
+.tileRow {
+  margin: 5px;
+}
+
+.new-game {
+  margin-top: 20px
+}
+
+.fa {
+  position: absolute;
+  margin: 5px 0px 0px -30px;
+  font-size: 80px;
+}
+
+.fa-times {
+  color: #f9275c;
+  text-shadow: 0px 1px 0px #e02353,
+               0px 2px 0px #e02353,
+               0px 3px 0px #e02353,
+               0px 4px 0px #e02353,
+               0px 5px 0px #e02353,
+               0px 6px 0px #e02353;
+}
+
+.fa-dot-circle-o {
+  color: #009dff;
+  text-shadow: 0px 1px 0px #008ae0,
+               0px 2px 0px #008ae0,
+               0px 3px 0px #008ae0,
+               0px 4px 0px #008ae0,
+               0px 5px 0px #008ae0,
+               0px 6px 0px #008ae0;
+}
