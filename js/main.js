@@ -34,7 +34,7 @@ const App = React.createClass({
   newGame () {
     const {theBoard, players, message, currentPlayer, gameOver} = this.state
 
-    let newPlayers = [{name: 'Player One', winCheck: {}}, {name: 'Player Two', winCheck: {}}]
+    let newPlayers = [{name: 'Player One', winCheck: {}, duplicates: 0}, {name: 'Player Two', winCheck: {}, duplicates: 0}]
 
     let startTurn = 0
 
@@ -85,6 +85,7 @@ const App = React.createClass({
       // winState horizontal
       if (players[currP].winCheck[x]) {
         players[currP].winCheck[x] += 1
+        players[currP].duplicates += 1
         if (players[currP].winCheck[x] === 3) {
           return this.winState()
         }
@@ -95,6 +96,7 @@ const App = React.createClass({
       // winState vertical
       if (players[currP].winCheck[y]) {
         players[currP].winCheck[y] += 1
+        players[currP].duplicates += 1
         if (players[currP].winCheck[y] === 3) {
           return this.winState()
         }
@@ -103,11 +105,12 @@ const App = React.createClass({
       }
 
       // winState diagonal
-      if (Object.keys(players[currP].winCheck).length === 6) {
+      if (Object.keys(players[currP].winCheck).length === 6 && players[currP].duplicates === 0) {
         return this.winState()
       }
 
       currP === 0 ? currP = 1 : currP = 0
+
       playerMessage = `Current Turn: ${players[currP].name}`
     } else {
       playerMessage = `Click New Game to reset`
